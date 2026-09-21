@@ -254,3 +254,23 @@ def getValue(lockerId):
     finally:
         conn.close()
     return rows
+
+
+def getAllLockers(ownerId, facilityId):
+    rows = None
+    try:
+        conn = get_connection()
+        cursor = conn.cursor()
+
+        cursor.execute('''
+                       SELECT *
+                       FROM Locker
+                       WHERE owner_id = ? AND facility_id = ?
+                       ''', (ownerId,facilityId))
+
+        rows = cursor.fetchall()
+    except sqlite3.IntegrityError as e:
+        print(f"Failed to get lockers: {e}")
+    finally:
+        conn.close()
+    return rows

@@ -150,6 +150,47 @@ def change_ownership(lockerId):
             except ValueError:
                 print("Invalid inputs. Please try again.")
 
+
+def locker_selection_menu(ownerId, facilityId):
+    while True:
+        clear_screen()
+        print("Which locker would you like to view?")
+        lockers = db.getAllLockers(ownerId, facilityId)
+        for i, locker in enumerate(lockers):
+            print(f"{i + 1}. {locker[1]}")
+        while True:
+            try:
+                choice = int(input("Enter your choice: "))
+                if 1 <= choice <= len(lockers):
+                    locker_menu(lockers[choice - 1][0])
+                elif choice == 0:
+                    return
+                else:
+                    print("Invalid choice. Please try again.")
+                    break
+            except ValueError:
+                print("Invalid inputs. Please try again.")
+
+def locker_start_menu(facilityId):
+    while True:
+        clear_screen()
+        print("Whose lockers would you like to view?")
+        owners = db.getAllOwners()
+        for i, owner in enumerate(owners):
+            print(f"{i + 1}. {owner[1]}")
+        while True:
+            try:
+                choice = int(input("Enter your choice: "))
+                if 1 <= choice <= len(owners):
+                    locker_selection_menu(choice, facilityId)
+                elif choice == 0:
+                    return
+                else:
+                    print("Invalid choice. Please try again.")
+                    break
+            except ValueError:
+                print("Invalid inputs. Please try again.")
+
 def locker_menu(lockerId):
     while True:
         clear_screen()
@@ -228,7 +269,7 @@ def facility_menu(companyId):
             try:
                 choice = int(input("Enter your choice: "))
                 if 1 <= choice <= len(facilities):
-                    locker_menu(choice)
+                    locker_start_menu(choice)
                     break
                 elif choice == len(facilities) + 1:
                     add_facility(companyId)
