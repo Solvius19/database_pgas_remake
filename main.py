@@ -2,11 +2,13 @@ import DAL as db
 
 
 def clear_screen():
+    """Clears screen to assist in readability"""
     for i in range(0,50):
         print()
 
 
 def show_specific_owner_details():
+    """Shows owner details - Current Holdings, Payments, Basic Info"""
     while True:
         clear_screen()
         owners = db.getAllOwners()
@@ -22,12 +24,12 @@ def show_specific_owner_details():
                     print("\nCurrent Holdings:")
                     holdings = db.viewCurrentHoldings(ownerId)
                     for holding in holdings:
-                        value = db.getValue(holding[0])
-                        print(f"Locker ID: {holding[0]}, Company ID: {holding[3]}, Current Value: ${value[0]}")
+                        value = db.getValue(holding[0])[0][0]
+                        print(f"Locker ID: {holding[0]}, Company ID: {holding[3]}, Current Value: ${value}")
                     print("\nPayment History:")
                     payments = db.showPaymentHistory(ownerId)
                     for payment in payments:
-                        print(f"Payment ID: {payment[0]}, Locker: {payment[2]}, Amount: {payment[3]}")
+                        print(f"Payment ID: {payment[0]}, Locker: {payment[2]}, Amount: ${payment[3]}")
                     break
                 elif choice == 0:
                     return
@@ -39,6 +41,7 @@ def show_specific_owner_details():
 
 
 def owner_menu():
+    """Provides a menu for the user to look at owners -> all owners, view owner details"""
     while True:
         clear_screen()
         print("""
@@ -68,18 +71,22 @@ Owner Menu
 
 
 def view_locker_details(lockerId):
+    """Shows items and total value of locker"""
     items = db.getAllItems(lockerId)
     for item in items:
-        print(f"Item: {item[1]}\n Value: {item[3]}\n Category: {item[2]}")
+        print("----------------------------------------------")
+        print(f"Item: {item[1]} \nValue: ${item[3]} \nCategory: {item[2]}")
     sum = db.getValue(lockerId)[0]
-    print(f"Total value in locker: {sum}")
+    print("==============================================")
+    print(f"Total value in locker: ${sum[0]}")
 
 def add_item(lockerId):
+    """Helper method to add item to locker"""
     while True:
         try:
             itemName = input("Enter item name: ")
             itemCategory = input("Enter item category: ")
-            itemValue = int(input("Enter item value: "))
+            itemValue = float(input("Enter item value: "))
             db.addItem(lockerId, itemName, itemCategory, itemValue)
             print(f"Item {itemName} added to locker {lockerId}.")
             break
@@ -88,6 +95,7 @@ def add_item(lockerId):
 
 
 def remove_item(lockerId):
+    """Helper method to remove item from locker with ID"""
     while True:
         items = db.getAllItems(lockerId)
         for i, item in enumerate(items):
@@ -98,7 +106,7 @@ def remove_item(lockerId):
                 if 1 <= choice <= len(items):
                     db.removeItem(lockerId, items[choice - 1][0])
                     print(f"Item {items[choice - 1][1]} removed from locker {lockerId}.")
-                    break
+                    return
                 elif choice == 0:
                     return
                 else:
@@ -119,10 +127,10 @@ def modify_item(lockerId):
                 if 1 <= choice <= len(items):
                     newName = input("Enter new name: ")
                     newCategory = input("Enter new category: ")
-                    newValue = int(input("Enter new value: "))
+                    newValue = float(input("Enter new value: "))
                     db.modifyItem(lockerId, items[choice - 1][0], newName, newCategory, newValue)
                     print(f"Item {items[choice - 1][1]} modified.")
-                    break
+                    return
                 elif choice == 0:
                     return
                 else:
@@ -142,7 +150,7 @@ def change_ownership(lockerId):
                 if 1 <= choice <= len(owners):
                     db.changeOwner(lockerId, owners[choice - 1][0])
                     print(f"Ownership changed to {owners[choice - 1][1]}")
-                    break
+                    return
                 elif choice == 0:
                     return
                 else:
@@ -157,7 +165,7 @@ def locker_selection_menu(ownerId, facilityId):
         print("Which locker would you like to view?")
         lockers = db.getAllLockers(ownerId, facilityId)
         for i, locker in enumerate(lockers):
-            print(f"{i + 1}. {locker[1]}")
+            print(f"{i + 1}. {locker[0]}")
         while True:
             try:
                 choice = int(input("Enter your choice: "))
@@ -182,7 +190,7 @@ def locker_start_menu(facilityId):
             try:
                 choice = int(input("Enter your choice: "))
                 if 1 <= choice <= len(owners):
-                    locker_selection_menu(choice, facilityId)
+                    locker_selection_menu(owners[choice - 1][0], facilityId)
                 elif choice == 0:
                     return
                 else:
@@ -232,7 +240,9 @@ def locker_menu(lockerId):
 def add_facility(companyId):
     while True:
         facilityName = input("Enter facility name: ")
-        db.addFacility(facilityName, companyId)
+        location = input("Enter facility location: ")
+        size = int(input("Enter facility size: "))
+        db.addFacility(facilityName, location, companyId, size)
         print(f"Facility {facilityName} added.")
         break
 
@@ -246,9 +256,9 @@ def remove_facility(companyId):
             try:
                 choice = int(input("Enter your choice: "))
                 if 1 <= choice <= len(facilities):
-                    db.removeFacility(facilities[choice - 1][0])
+                    db.removeFacility(companyId, facilities[choice - 1][0])
                     print(f"Facility {facilities[choice - 1][1]} removed.")
-                    break
+                    return
                 elif choice == 0:
                     return
                 else:

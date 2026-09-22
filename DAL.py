@@ -123,15 +123,15 @@ def changeOwner(lockerId, owner):
         conn.close()
 
 
-def addItem(lockerId, itemName, itemCategory, itemQuantity):
+def addItem(lockerId, itemName, itemCategory, itemValue):
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute('''
-        INSERT INTO Items (locker_id, item_name, item_category, item_quantity)
+        INSERT INTO Items (locker_id, name, type, value)
         VALUES (?, ?, ?, ?)
-        ''', (lockerId, itemName, itemCategory, itemQuantity))
+        ''', (lockerId, itemName, itemCategory, itemValue))
 
         conn.commit()
         print("Item successfully added.")
@@ -141,15 +141,15 @@ def addItem(lockerId, itemName, itemCategory, itemQuantity):
         conn.close()
 
 
-def removeItem(lockerId, param):
+def removeItem(lockerId, itemId):
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute('''
         DELETE FROM Items
-        WHERE locker_id = ? AND item_id = ?
-        ''', (lockerId, param))
+        WHERE locker_id = ? AND items_id = ?
+        ''', (lockerId, itemId))
 
         conn.commit()
         print("Item successfully removed.")
@@ -198,15 +198,15 @@ def modifyItem(lockerId, itemId, newName, newCategory, newValue):
         conn.close()
 
 
-def addFacility(facilityName, companyId):
+def addFacility(facilityName, location, companyId, size):
     try:
         conn = get_connection()
         cursor = conn.cursor()
 
         cursor.execute('''
-        INSERT INTO Facility (name, company_id)
-        VALUES (?, ?)
-        ''', (facilityName, companyId))
+        INSERT INTO Facility (name, company_id, location, size)
+        VALUES (?, ?, ?, ?)
+        ''', (facilityName, companyId, location, size))
 
         conn.commit()
         print("Facility successfully added.")
