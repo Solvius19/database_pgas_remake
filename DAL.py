@@ -1,12 +1,14 @@
 import sqlite3
 
 def get_connection():
+    """Function to connect to the database"""
     conn = sqlite3.connect('warehouseDB')
     conn.execute("PRAGMA foreign_keys=ON")
     return conn
 
 
 def getAllOwners():
+    """Function to get all owners for printing"""
     rows = None
     try:
         conn = get_connection()
@@ -86,6 +88,7 @@ def getAllFacilities(companyId):
 
 
 def getAllCompanies():
+    """Function to get all companies for printing"""
     rows = None
     try:
         conn = get_connection()
@@ -105,6 +108,7 @@ def getAllCompanies():
 
 
 def changeOwner(lockerId, owner):
+    """Function to change ownership of locker using a new owner's id"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -124,6 +128,7 @@ def changeOwner(lockerId, owner):
 
 
 def addItem(lockerId, itemName, itemCategory, itemValue):
+    """Function to add item to locker using parameters"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -142,6 +147,7 @@ def addItem(lockerId, itemName, itemCategory, itemValue):
 
 
 def removeItem(lockerId, itemId):
+    """Function to remove specified item from specified locker"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -160,6 +166,7 @@ def removeItem(lockerId, itemId):
 
 
 def getAllItems(lockerId):
+    """Function to get all items for a locker"""
     rows = None
     try:
         conn = get_connection()
@@ -180,6 +187,7 @@ def getAllItems(lockerId):
 
 
 def modifyItem(lockerId, itemId, newName, newCategory, newValue):
+    """Function to modify item in locker using new parameters"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -199,6 +207,7 @@ def modifyItem(lockerId, itemId, newName, newCategory, newValue):
 
 
 def addFacility(facilityName, location, companyId, size):
+    """Function to take parameters from method to create facility"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -218,6 +227,7 @@ def addFacility(facilityName, location, companyId, size):
 
 
 def removeFacility(companyId, facilityId):
+    """Function to remove facility based off facilityId and companyId"""
     try:
         conn = get_connection()
         cursor = conn.cursor()
@@ -237,6 +247,7 @@ def removeFacility(companyId, facilityId):
 
 
 def getValue(lockerId):
+    """Function to get sum of the value of the locker's items (through SUM)"""
     rows = None
     try:
         conn = get_connection()
@@ -257,6 +268,7 @@ def getValue(lockerId):
 
 
 def getAllLockers(ownerId, facilityId):
+    """Function to get all lockers associated with a owner at a facility"""
     rows = None
     try:
         conn = get_connection()

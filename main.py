@@ -30,7 +30,7 @@ def show_specific_owner_details():
                     payments = db.showPaymentHistory(ownerId)
                     for payment in payments:
                         print(f"Payment ID: {payment[0]}, Locker: {payment[2]}, Amount: ${payment[3]}")
-                    break
+                    return
                 elif choice == 0:
                     return
                 else:
@@ -117,6 +117,7 @@ def remove_item(lockerId):
 
 
 def modify_item(lockerId):
+    """Helper method to modify locker based off locker ID"""
     while True:
         items = db.getAllItems(lockerId)
         for i, item in enumerate(items):
@@ -140,6 +141,7 @@ def modify_item(lockerId):
 
 
 def change_ownership(lockerId):
+    """Change ownership of current locker by prompting user for new owner's id"""
     while True:
         owners = db.getAllOwners()
         for i, owner in enumerate(owners):
@@ -160,6 +162,7 @@ def change_ownership(lockerId):
 
 
 def locker_selection_menu(ownerId, facilityId):
+    """Locker selection menu based off owner's holdings and facility id"""
     while True:
         clear_screen()
         print("Which locker would you like to view?")
@@ -180,6 +183,7 @@ def locker_selection_menu(ownerId, facilityId):
                 print("Invalid inputs. Please try again.")
 
 def locker_start_menu(facilityId):
+    """Main menu to select owner from facility"""
     while True:
         clear_screen()
         print("Whose lockers would you like to view?")
@@ -200,6 +204,7 @@ def locker_start_menu(facilityId):
                 print("Invalid inputs. Please try again.")
 
 def locker_menu(lockerId):
+    """main menu to modify and view locker details"""
     while True:
         clear_screen()
         print("""
@@ -238,6 +243,7 @@ def locker_menu(lockerId):
 
 
 def add_facility(companyId):
+    """Helper method to add facility"""
     while True:
         facilityName = input("Enter facility name: ")
         location = input("Enter facility location: ")
@@ -248,6 +254,7 @@ def add_facility(companyId):
 
 
 def remove_facility(companyId):
+    """Helper method to remove facility"""
     while True:
         facilities = db.getAllFacilities(companyId)
         for i, facility in enumerate(facilities):
@@ -268,6 +275,7 @@ def remove_facility(companyId):
 
 
 def facility_menu(companyId):
+    """Menu for facility details based off company"""
     while True:
         clear_screen()
         facilities = db.getAllFacilities(companyId)
@@ -296,6 +304,7 @@ def facility_menu(companyId):
                 print("Invalid inputs. Please try again.")
 
 def company_menu():
+    """Menu to select company -> leads to facility selection"""
     while True:
         clear_screen()
         companies = db.getAllCompanies()
@@ -317,6 +326,7 @@ def company_menu():
 
 
 def main():
+    """Main method to use Database Managment Software"""
     while True:
         clear_screen()
         print("""
